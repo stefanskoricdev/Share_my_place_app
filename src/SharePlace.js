@@ -1,12 +1,24 @@
 import { Modal } from "./UI/Modal";
-
+import { Map } from "./UI/Map";
 class PlaceFinder {
   constructor() {
     const adressForm = document.querySelector("form");
     const locateUserBtn = document.getElementById("locate-btn");
 
-    locateUserBtn.addEventListener("click", this.locateUserHandler);
-    adressForm.addEventListener("submit", this.userAdressHandler);
+    locateUserBtn.addEventListener("click", this.locateUserHandler.bind(this));
+    adressForm.addEventListener("submit", this.userAdressHandler.bind(this));
+  }
+
+  selectPlace(coordinates) {
+    const map = new Map(coordinates);
+    if (this.map) {
+      this.map.render(coordinates);
+    } else {
+      this.map;
+    }
+    //This if check is used to see if there is allready stored current position,
+    //If yes it will use it from database for example, and if its not it will render
+    //new map with new coordinates
   }
 
   locateUserHandler() {
@@ -27,9 +39,9 @@ class PlaceFinder {
           modal.hide();
           const coordinates = {
             lat: successResult.coords.latitude,
-            long: successResult.coords.longitude,
+            lng: successResult.coords.longitude,
           };
-          console.log(coordinates);
+          this.selectPlace(coordinates);
         },
         (error) => {
           modal.hide();
